@@ -6,7 +6,7 @@ In the producer-consumer problem,
 there is a shared resource that a `Producer`
 keeps populating with data items,
 and a `Consumer` that keeps reading data items
-and possibly processing them in some way.
+from it, and possibly processing them in some way.
 
 Each of the `Producer` and the `Consumer`
 are executing their code in their own separate
