@@ -1,7 +1,5 @@
-import java.util.concurrent.BlockingQueue;
-
 public class Producer implements Runnable {
-    private final BlockingQueue<Integer> queue;
+    private final Buffer buffer;
     private final int N;
     private boolean done;
 
@@ -9,28 +7,24 @@ public class Producer implements Runnable {
         return this.done;
     }
 
-    public Producer(BlockingQueue<Integer> queue, int n) {
+    public Producer(Buffer buffer, int n) {
         this.done = false;
 
-        this.queue = queue;
+        this.buffer = buffer;
         this.N = n;
     }
 
     @Override
     public void run() {
-//        Iterate over all integers from 0 to N
+//      Iterate over all integers from 0 to N
         for (int i = 0; i <= this.N; i++) {
-//            If the number is prime
+//          if the number is prime
             if (this.isPrime(i)) {
-                try {
-//                    Put it in the blocking queue
-                    this.queue.put(i);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+//              Put it in the blocking queue
+                this.buffer.put(i);
             }
         }
-//        Producer is done producing, Consumer can now terminate (i.e. stop waiting).
+//      Producer is done producing, Consumer can now terminate (i.e. stop waiting).
         this.done = true;
     }
 

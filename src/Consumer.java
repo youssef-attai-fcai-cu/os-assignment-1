@@ -1,16 +1,15 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
 
 public class Consumer implements Runnable {
-    private final BlockingQueue<Integer> queue;
+    private final Buffer buffer;
     private final String outputFileName;
     private final Producer producer;
 
 
-    public Consumer(BlockingQueue<Integer> queue, String outputFileName, Producer producer) {
-        this.queue = queue;
+    public Consumer(Buffer buffer, String outputFileName, Producer producer) {
+        this.buffer = buffer;
         this.outputFileName = outputFileName;
         this.producer = producer;
 
@@ -21,15 +20,11 @@ public class Consumer implements Runnable {
 
     @Override
     public void run() {
-//        As long as the producer is not done producing
+//      As long as the producer is not done producing
         while (!this.producer.isDone()) {
-            try {
-//                Keep taking prime numbers from the buffer and write them to the output file
-                int nextPrime = queue.take();
-                this.writeToOutputFile(nextPrime);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+//          Keep taking prime numbers from the buffer and write them to the output file
+            int nextPrime = buffer.take();
+            this.writeToOutputFile(nextPrime);
         }
     }
 
