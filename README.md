@@ -61,3 +61,11 @@ prime numbers taken from it.
 - Amr Khaled [@Le-Wolfie](https://github.com/Le-Wolfie)
 - Sherif Hassan [@sherif3hassan](https://github.com/sherif3hassan)
 - Youssef Galal [@youssef-attai](https://github.com/youssef-attai)
+
+
+## Acknowledgements
+
+- [Defog Tech - Java Concurrency Interview: Implement Producer Consumer pattern using wait-notify](https://www.youtube.com/watch?v=UOr9kMCCa5g)
+- [W3Schools - Java Create and Write To Files](https://www.w3schools.com/java/java_files_create.asp)
+- [Javatpoint - Prime Number Program in Java](https://www.javatpoint.com/prime-number-program-in-java)
+- [GeeksforGeeks - Reentrant Lock in Java](https://www.geeksforgeeks.org/reentrant-lock-java/)
