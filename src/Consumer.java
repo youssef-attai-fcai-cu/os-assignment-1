@@ -4,42 +4,58 @@ import java.io.IOException;
 
 public class Consumer implements Runnable {
     private final Buffer buffer;
-    private final String outputFileName;
+    private String outputFileName;
     private final Producer producer;
+    private Callback updateCallback;
+    private Callback doneCallback;
 
+    public void setUpdateCallback(Callback updateCallback) {
+        this.updateCallback = updateCallback;
+    }
 
-    public Consumer(Buffer buffer, String outputFileName, Producer producer) {
+    public void setDoneCallback(Callback doneCallback) {
+        this.doneCallback = doneCallback;
+    }
+
+    public Consumer(Buffer buffer, Producer producer) {
         this.buffer = buffer;
-        this.outputFileName = outputFileName;
         this.producer = producer;
+    }
 
-
-//        Create the output file for the prime numbers
-        this.createFile();
+    public void setOutputFileName(String outputFileName) {
+        this.outputFileName = outputFileName;
     }
 
     @Override
     public void run() {
+//        Always reset the producer
+        this.producer.setDone(false, this);
+
+//        Create the output file for the prime numbers
+        this.createFile();
+
 //      As long as the Producer is not done producing
-        while (!this.producer.isDone()) {
+        while (!this.producer.isDone() || !this.buffer.isEmpty()) {
 //          Keep taking prime numbers from the buffer and write them to the output file
             int nextPrime = buffer.take();
             this.writeToOutputFile(nextPrime);
+            this.updateCallback.call();
         }
+        this.doneCallback.call();
     }
 
     private void createFile() {
+        File outFile = new File(this.outputFileName);
         try {
-            File myObj = new File(this.outputFileName);
-            if (myObj.createNewFile()) {
-                System.out.println("Created file: " + myObj.getName());
-            } else {
-                System.out.println(this.outputFileName + " already exists.");
-            }
+            boolean success = outFile.createNewFile();
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+//            if (myObj.createNewFile()) {
+//                System.out.println("Created file: " + myObj.getName());
+//            } else {
+//                System.out.println(this.outputFileName + " already exists.");
+//            }
     }
 
     private void writeToOutputFile(Integer prime) {
@@ -47,9 +63,9 @@ public class Consumer implements Runnable {
             FileWriter myWriter = new FileWriter(this.outputFileName, true);
             myWriter.write("\"" + prime + "\", ");
             myWriter.close();
-            System.out.println("Added: " + prime);
+//            System.out.println("Consumed: " + prime);
         } catch (IOException e) {
-            System.out.println("Error: " + prime);
+            System.out.println("Consumer Error: " + prime);
             e.printStackTrace();
         }
     }
