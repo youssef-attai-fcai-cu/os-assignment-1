@@ -20,7 +20,7 @@ public class Consumer implements Runnable {
 
     @Override
     public void run() {
-//      As long as the producer is not done producing
+//      As long as the Producer is not done producing
         while (!this.producer.isDone()) {
 //          Keep taking prime numbers from the buffer and write them to the output file
             int nextPrime = buffer.take();

@@ -18,9 +18,9 @@ public class Producer implements Runnable {
     public void run() {
 //      Iterate over all integers from 0 to N
         for (int i = 0; i <= this.N; i++) {
-//          if the number is prime
+//          If the number is prime
             if (this.isPrime(i)) {
-//              Put it in the blocking queue
+//              Put it in the buffer
                 this.buffer.put(i);
             }
         }
