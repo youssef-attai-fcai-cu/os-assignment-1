@@ -4,7 +4,7 @@
 
 In the producer-consumer problem,
 there is a shared resource that a `Producer`
-that keeps populating it with data items,
+keeps populating it with data items,
 and a `Consumer` that keeps reading data items
 and possibly processing them in some way.
 
