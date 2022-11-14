@@ -29,6 +29,8 @@ In this example, we have:
   from the buffer, and writes them to an
   output text file.
 
+So, the buffer is the shared resource.
+
 The `Producer` takes an integer `N`, and iterates
 over all integers from `0` to `N` in search for prime
 numbers.
