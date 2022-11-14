@@ -15,7 +15,7 @@ the shared resource at the same time, which can
 be a problem.
 
 The solution is to simply _lock_ the shared resource
-when it is use, blocking any thread trying to access it
+when it is in use, blocking any thread trying to access it
 at that time, and only unlock it when it is ready
 for use again.
 
