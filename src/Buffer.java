@@ -10,7 +10,7 @@ public class Buffer {
 //    preventing access when the queue is not ready for certain actions,
 //    like trying to remove a prime number from it when it is empty,
 //    or adding a prime number to it when it is full.
-    private final ReentrantLock lock = new ReentrantLock(true);
+    private final ReentrantLock lock = new ReentrantLock(true); // Might need to implement out own lock
 
 //    These are the conditions that the Producer and Consumer threads
 //    are going to wait for until they are signaled to be true.
