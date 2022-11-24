@@ -9,7 +9,7 @@ class Semaphore {
         value = initial;
     }
 
-    public synchronized void P() {
+    public synchronized void WAIT() {
         value--;
         if (value < 0)
             try {
@@ -18,7 +18,7 @@ class Semaphore {
             }
     }
 
-    public synchronized void V() {
+    public synchronized void NOTIFY() {
         value++;
         if (value <= 0) notify();
     }

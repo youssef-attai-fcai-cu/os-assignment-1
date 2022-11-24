@@ -39,6 +39,7 @@ public class GUI extends JFrame {
                         @Override
                         public void call() {
                             long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+
                             timeElapsed.setText(elapsedTime + " ms");
                             largestPrime.setText(Integer.toString(P.largestPrime));
                             generatedPrime.setText(Integer.toString(P.numberOfPrimesGenerated));

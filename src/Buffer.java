@@ -14,18 +14,18 @@ class Buffer {
     }
 
     public void produce(int value) {
-        spaces.P();
+        spaces.WAIT();
         store[inptr] = value;
         inptr = (inptr + 1) % size;
-        elements.V();
+        elements.NOTIFY();
     }
 
     public int consume() {
         int value;
-        elements.P();
+        elements.WAIT();
         value = store[outptr];
         outptr = (outptr + 1) % size;
-        spaces.V();
+        spaces.NOTIFY();
         return value;
     }
 }
