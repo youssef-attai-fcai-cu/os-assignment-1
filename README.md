@@ -21,6 +21,8 @@ for use again.
 
 ## Example
 
+**This example is outdated**
+
 In this example, we have:
 
 - a `Producer` that produces
