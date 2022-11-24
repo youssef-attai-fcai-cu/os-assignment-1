@@ -2,43 +2,30 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Consumer implements Runnable {
-    private final Buffer buffer;
-    private final String outputFileName;
-    private final Producer producer;
+class Consumer extends Thread {
+    Buffer buf;
+    String outputFileName;
+    Callback updateCallback;
 
-
-    public Consumer(Buffer buffer, String outputFileName, Producer producer) {
-        this.buffer = buffer;
+    public Consumer(Buffer buf, String outputFileName) {
+        this.buf = buf;
         this.outputFileName = outputFileName;
-        this.producer = producer;
-
-
-//        Create the output file for the prime numbers
-        this.createFile();
     }
 
-    @Override
     public void run() {
-//      As long as the Producer is not done producing
-        while (!this.producer.isDone()) {
-//          Keep taking prime numbers from the buffer and write them to the output file
-            int nextPrime = buffer.take();
-            this.writeToOutputFile(nextPrime);
+        this.createFile();
+        while (true) {
+            this.writeToOutputFile(buf.consume());
+            this.updateCallback.call();
         }
     }
 
     private void createFile() {
+        File outFile = new File(this.outputFileName);
         try {
-            File myObj = new File(this.outputFileName);
-            if (myObj.createNewFile()) {
-                System.out.println("Created file: " + myObj.getName());
-            } else {
-                System.out.println(this.outputFileName + " already exists.");
-            }
+            boolean success = outFile.createNewFile();
         } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -47,10 +34,13 @@ public class Consumer implements Runnable {
             FileWriter myWriter = new FileWriter(this.outputFileName, true);
             myWriter.write("\"" + prime + "\", ");
             myWriter.close();
-            System.out.println("Added: " + prime);
         } catch (IOException e) {
-            System.out.println("Error: " + prime);
+            System.out.println("Consumer Error: " + prime);
             e.printStackTrace();
         }
+    }
+
+    public void setUpdateCallback(Callback callback) {
+        this.updateCallback = callback;
     }
 }

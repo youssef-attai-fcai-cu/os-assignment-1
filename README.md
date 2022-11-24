@@ -2,7 +2,7 @@
 
 ## Description
 
-In the producer-consumer problem,
+In the Producer-Consumer problem,
 there is a shared resource that a `Producer`
 keeps populating with data items,
 and a `Consumer` that keeps reading data items
@@ -26,37 +26,37 @@ for use again.
 In this example, we have:
 
 - a `Producer` that produces
-  prime numbers and puts them in a buffer.
+  prime numbers and puts them in a Buffer.
 - a `Consumer` that takes those prime numbers
-  from the buffer, and writes them to an
+  from the Buffer, and writes them to an
   output text file.
 
-So, the buffer is the shared resource.
+So, the Buffer is the shared resource.
 
 The `Producer` takes an integer `N`, and iterates
 over all integers from `0` to `N` in search for prime
 numbers.
 
 When the `Producer` finds a prime number, it attempts
-to put it in the buffer.
+to put it in the Buffer.
 
-If the buffer is empty, the prime number is put safely.
+If the Buffer is empty, the prime number is put safely.
 
-If the buffer is _not_ empty, the `Producer` thread is
-**blocked** until it is notified that the buffer is
+If the Buffer is _not_ empty, the `Producer` thread is
+**blocked** until it is notified that the Buffer is
 not full anymore, and is ready to have more
 prime numbers put in it.
 
 The `Consumer` on the other hand keeps taking prime
-numbers from the buffer as long as the `Producer` is
+numbers from the Buffer as long as the `Producer` is
 not done producing (which is handled using a simple
 flag in the `Producer`), and writing them to the output
 file.
 
 If the `Consumer` tries to take a prime number
-from the buffer and did not find any, the `Consumer`
+from the Buffer and did not find any, the `Consumer`
 thread will be **blocked** until it is notified that
-the buffer is not empty anymore, and is ready to have
+the Buffer is not empty anymore, and is ready to have
 prime numbers taken from it.
 
 ## Authors

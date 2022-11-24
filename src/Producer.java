@@ -1,39 +1,31 @@
-public class Producer implements Runnable {
-    private final Buffer buffer;
-    private final int N;
-    private boolean done;
+class Producer extends Thread {
+    int N;
+    Buffer buf;
 
-    public boolean isDone() {
-        return this.done;
-    }
+    int largestPrime = 0;
+    int numberOfPrimesGenerated = 0;
 
-    public Producer(Buffer buffer, int n) {
-        this.done = false;
-
-        this.buffer = buffer;
+    public Producer(Buffer buf, int n) {
+        this.buf = buf;
         this.N = n;
     }
 
-    @Override
     public void run() {
-//      Iterate over all integers from 0 to N
         for (int i = 0; i <= this.N; i++) {
-//          If the number is prime
             if (this.isPrime(i)) {
-//              Put it in the buffer
-                this.buffer.put(i);
+                this.buf.produce(i);
+                this.numberOfPrimesGenerated++;
+                this.largestPrime = i;
             }
         }
-//      Producer is done producing, Consumer can now terminate (i.e. stop waiting).
-        this.done = true;
     }
 
-    private boolean isPrime(int number) {
-        if (number <= 1) {
+    private boolean isPrime(int n) {
+        if (n <= 1) {
             return false;
         }
-        for (int i = 2; i < Math.sqrt(number); i++) {
-            if (number % i == 0) {
+        for (int i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i == 0) {
                 return false;
             }
         }
