@@ -1,49 +1,22 @@
-public class Producer implements Runnable {
-    private final Buffer buffer;
-    private int N;
-    private boolean done;
+class Producer extends Thread {
+    int N;
+    Buffer buf;
 
-    private int largestPrime;
-    private int numberOfPrimesGenerated;
-    public void setDone(boolean done, Object by) {
-//        System.out.println("DONE: " + done + ", BY: " + by.toString());
-        this.done = done;
-    }
+    int largestPrime = 0;
+    int numberOfPrimesGenerated = 0;
 
-    public boolean isDone() {
-        return this.done;
-    }
-
-    public Producer(Buffer buffer) {
-        this.setDone(false, this);
-        this.buffer = buffer;
-    }
-
-    public void setN(int n) {
+    public Producer(Buffer buf, int n) {
+        this.buf = buf;
         this.N = n;
     }
 
-    @Override
     public void run() {
-        this.largestPrime = 0;
-        this.numberOfPrimesGenerated = 0;
-
-        try {
-//      Iterate over all integers from 0 to N
-            for (int i = 0; i <= this.N; i++) {
-//          If the number is prime
-                if (this.isPrime(i)) {
-//                  Update largest prime
-                    this.largestPrime = Math.max(this.largestPrime, i);
-//                  Update number of primes generated
-                    this.numberOfPrimesGenerated++;
-//                  Put it in the buffer
-                    this.buffer.put(i);
-                }
+        for (int i = 0; i <= this.N; i++) {
+            if (this.isPrime(i)) {
+                this.buf.produce(i);
+                this.numberOfPrimesGenerated++;
+                this.largestPrime = i;
             }
-        } finally {
-//      Producer is done producing, Consumer can now terminate (i.e. stop waiting).
-            this.setDone(true, this);
         }
     }
 
@@ -57,13 +30,5 @@ public class Producer implements Runnable {
             }
         }
         return true;
-    }
-
-    public int getLargestPrime() {
-        return this.largestPrime;
-    }
-
-    public int getNumberOfPrimesGenerated() {
-        return this.numberOfPrimesGenerated;
     }
 }

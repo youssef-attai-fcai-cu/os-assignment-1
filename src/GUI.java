@@ -12,32 +12,7 @@ public class GUI extends JFrame {
     private JLabel generatedPrime;
     private JLabel timeElapsed;
 
-    long startTime;
-
     public GUI() {
-//        The buffer size (i.e. the limit for the blocking queue)
-        Buffer buffer = new Buffer();
-
-        Producer producer = new Producer(buffer);
-        Consumer consumer = new Consumer(buffer, producer);
-
-        consumer.setUpdateCallback(new Callback() {
-            @Override
-            public void call() {
-                long elapsedTime = (System.nanoTime() - startTime) / 1000000;
-                timeElapsed.setText(Long.toString(elapsedTime) + " ms");
-                largestPrime.setText(Integer.toString(producer.getLargestPrime()));
-                generatedPrime.setText(Integer.toString(producer.getNumberOfPrimesGenerated()));
-            }
-        });
-
-        consumer.setDoneCallback(new Callback() {
-            @Override
-            public void call() {
-                startProducerButton.setEnabled(true);
-            }
-        });
-
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Prime Production");
@@ -49,24 +24,29 @@ public class GUI extends JFrame {
         startProducerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startProducerButton.setEnabled(false);
-
                 if (e.getSource() == startProducerButton) {
+                    long startTime = System.nanoTime();
+
                     int N = Integer.parseInt(tfN.getText());
                     int bufferSize = Integer.parseInt(tfBufferSize.getText());
                     String outputFileName = tfOutputFile.getText();
 
-                    buffer.setBufferSize(bufferSize);
-                    producer.setN(N);
-                    consumer.setOutputFileName(outputFileName);
+                    Buffer buf = new Buffer(bufferSize);
+                    Producer P = new Producer(buf, N);
+                    Consumer C = new Consumer(buf, outputFileName);
 
-                    Thread producerThread = new Thread(producer);
-                    Thread consumerThread = new Thread(consumer);
+                    C.setUpdateCallback(new Callback() {
+                        @Override
+                        public void call() {
+                            long elapsedTime = (System.nanoTime() - startTime) / 1000000;
+                            timeElapsed.setText(elapsedTime + " ms");
+                            largestPrime.setText(Integer.toString(P.largestPrime));
+                            generatedPrime.setText(Integer.toString(P.numberOfPrimesGenerated));
+                        }
+                    });
 
-                    startTime = System.nanoTime();
-
-                    producerThread.start();
-                    consumerThread.start();
+                    P.start();
+                    C.start();
                 }
             }
         });
